@@ -330,6 +330,9 @@
     <Compile Include="Infrastructure\StructureMapDependencyResolver.cs" />
     <Compile Include="Models\Blocks\IHasSettingsBlock.cs" />
     <Compile Include="Models\Blocks\SettingsBlock.cs" />
+    <Compile Include="Models\Catalog\FashionNode.cs" />
+    <Compile Include="Models\Catalog\ShirtProduct.cs" />
+    <Compile Include="Models\Catalog\ShirtVariation.cs" />
     <Compile Include="Models\Media\ImageModel.cs" />
     <Compile Include="Models\Pages\AccountPage.cs" />
     <Compile Include="Models\Pages\CartPage.cs" />
@@ -353,7 +356,6 @@
     <Folder Include="Business\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Models\Catalog\_PlaceHolder.txt" />
     <Content Include="Models\Properties\_PlaceHolder.txt" />
     <Content Include="Static\css\bootstrap-collapse.js" />
     <Content Include="Static\css\bootstrap-responsive.css" />
