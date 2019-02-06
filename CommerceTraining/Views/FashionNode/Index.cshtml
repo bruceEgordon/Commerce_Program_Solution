@@ -1,8 +1,23 @@
-﻿@model CommerceTraining.Models.Catalog.FashionNode
+﻿@model CommerceTraining.SupportingClasses.NodeEntryCombo
 
-<div>
-    @Html.PropertyFor(m => m.Code)
-</div>
-<div>
-    @Html.PropertyFor(m => m.ContentType)
-</div>
+<h4>Nodes</h4>
+<ul>
+    @foreach (var item in Model.nodes)
+    {
+        <li>
+            <a href="@item.url">@item.name</a>
+            <img src="@item.imageThumbUrl" />
+        </li>
+    }
+</ul>
+
+<h4>Entries</h4>
+<ul>
+    @foreach (var item in Model.entries)
+    {
+        <li>
+            <a href="@item.url">@item.name</a>
+            <img src="@item.imageThumbUrl" />
+        </li>
+    }
+</ul>
