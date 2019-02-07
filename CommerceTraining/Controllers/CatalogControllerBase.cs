@@ -15,10 +15,10 @@ namespace CommerceTraining.Controllers
 {
     public class CatalogControllerBase<T> : ContentController<T> where T : CatalogContentBase
     {
-        private readonly IContentLoader _contentLoader;
-        private readonly UrlResolver _urlResolver;
-        private readonly AssetUrlResolver _assetUrlResolver;
-        private readonly ThumbnailUrlResolver _thumbnailUrlResolver;
+        protected readonly IContentLoader _contentLoader;
+        protected readonly UrlResolver _urlResolver;
+        protected readonly AssetUrlResolver _assetUrlResolver;
+        protected readonly ThumbnailUrlResolver _thumbnailUrlResolver;
 
         public CatalogControllerBase(IContentLoader contentLoader, UrlResolver urlResolver,
             AssetUrlResolver assetUrlResolver, ThumbnailUrlResolver thumbnailUrlResolver)

@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Web.Mvc;
 using CommerceTraining.Models.Catalog;
+using CommerceTraining.Models.ViewModels;
 using EPiServer;
 using EPiServer.Commerce.Catalog;
+using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Core;
 using EPiServer.Framework.DataAnnotations;
 using EPiServer.Web.Mvc;
@@ -20,10 +22,17 @@ namespace CommerceTraining.Controllers
 
         public ActionResult Index(ShirtVariation currentContent)
         {
-            /* Implementation of action. You can create your own view model class that you pass to the view or
-             * you can pass the page type for simpler templates */
+            var viewModel = new ShirtVariationViewModel
+            {
+                CanBeMonogrammed = currentContent.CanBeMonogrammed,
+                image = GetDefaultAsset(currentContent),
+                url = GetUrl(currentContent.ContentLink),
+                MainBody = currentContent.MainBody,
+                name = currentContent.Name,
+                priceString = currentContent.GetDefaultPrice().UnitPrice.ToString("C")
+            };
 
-            return View(currentContent);
+            return View(viewModel);
         }
     }
 }

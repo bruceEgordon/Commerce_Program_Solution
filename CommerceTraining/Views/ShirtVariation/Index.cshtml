@@ -1,8 +1,15 @@
-﻿@model CommerceTraining.Models.Catalog.ShirtVariation
+﻿@model CommerceTraining.Models.ViewModels.ShirtVariationViewModel
 
 <div>
-    @Html.PropertyFor(m => m.Code)
+    <img src="@Model.image" />
 </div>
 <div>
-    @Html.PropertyFor(m => m.ContentType)
+    <strong>@Model.name</strong>
+</div>
+<div>
+    <strong>Price: @Model.priceString</strong>
+    
+</div>
+<div>
+    <strong>Can be monogrammed</strong> @Html.CheckBoxFor(m => m.CanBeMonogrammed)
 </div>
