@@ -62,12 +62,21 @@ namespace CommerceTraining.Controllers
         }
         public ActionResult Index(CartPage currentPage)
         {
-            // ToDo: (lab D2)
+            var cart = _orderRepository.LoadCart<ICart>(PrincipalInfo.CurrentPrincipal.GetContactId(), "Default");
 
+            if (cart == null) return View("NoCart");
 
+            var viewModel = new CartViewModel
+            {
+                WarningMessage = ValidateCart(cart),
+                LineItems = cart.GetAllLineItems(),
+                SubTotal = cart.GetSubTotal()
+            };
 
-            // The below is a dummy, remove when lab D2 is done
-            return null;
+            var promos = _promotionEngine.Run(cart);
+            _orderRepository.Save(cart);
+
+            return View(viewModel);
         }
 
         public ActionResult Checkout()

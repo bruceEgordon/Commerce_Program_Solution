@@ -12,7 +12,7 @@
 </div>
 <div>
     Processing messages:
-    @Model.WarningMessage
+    @(string.IsNullOrEmpty(Model.WarningMessage) ? "No message" : Model.WarningMessage)
 </div>
 
 
