@@ -98,10 +98,10 @@ namespace CommerceTraining.Controllers
 
 
             // ToDo: Define/update Shipping
-
+            AdjustFirstShipmentInOrder(cart, orderAddr, model.SelectedShipId);
 
             // ToDo: Add a Payment to the Order 
-
+            AddPaymentToOrder(cart, model.SelectedPayId);
 
             // ToDo: Add a transaction scope and convert the cart to PO
 
@@ -163,10 +163,22 @@ namespace CommerceTraining.Controllers
         }
 
         private void AdjustFirstShipmentInOrder(ICart cart, IOrderAddress orderAddress, Guid selectedShip)
-        { }
+        {
+            IShipment shipment = cart.GetFirstShipment();
+            shipment.ShippingMethodId = selectedShip;
+            shipment.ShippingAddress = orderAddress;
+            shipment.ShipmentTrackingNumber = "ABC123";
+        }
 
         private void AddPaymentToOrder(ICart cart, Guid selectedPaymentGuid)
-        { }
+        {
+            var payMethod = PaymentManager.GetPaymentMethod(selectedPaymentGuid);
+            var payment = _orderGroupFactory.CreatePayment(cart);
+            payment.PaymentMethodId = selectedPaymentGuid;
+            payment.PaymentMethodName = payMethod.PaymentMethod[0].Name;
+            payment.Amount = _orderGroupCalculator.GetTotal(cart);
+            cart.AddPayment(payment);
+        }
 
         private IOrderAddress AddAddressToOrder(ICart cart)
         {
@@ -183,6 +195,7 @@ namespace CommerceTraining.Controllers
                 shippingAddress.CountryName = "USA";
                 shippingAddress.Id = "DemoAddress";
                 shippingAddress.Email = "Homer@acme.com";
+                shippingAddress.City = "Springfield";
             }
             else
             {
