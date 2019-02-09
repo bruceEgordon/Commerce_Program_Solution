@@ -78,28 +78,23 @@ namespace CommerceTraining.Controllers
 
             var model = new CheckOutViewModel(currentPage)
             {
-                // ToDo: Exercise (E1) - get shipments & payments
-
+                PaymentMethods = GetPaymentMethods(),
+                ShipmentMethods = GetShipmentMethods(),
+                ShippingRates = GetShippingRates()
             };
 
             return View(model);
         }
 
 
-        // Exercise (E1) creation of GetPaymentMethods(), GetShipmentMethods() and GetShippingRates() goes below
-        // ToDo: Get IEnumerables of Shipping and Payment methods along with ShippingRates
-
-
-
-
-
         //Exercise (E2) Do CheckOut
         public ActionResult CheckOut(CheckOutViewModel model)
         {
-            // ToDo: Load the cart
+            var cart = _orderRepository.LoadCart<ICart>(PrincipalInfo.CurrentPrincipal.GetContactId(), "Default");
 
+            if (cart == null) throw new ApplicationException("No cart");
 
-            // ToDo: Add an OrderAddress
+            IOrderAddress orderAddr = AddAddressToOrder(cart);
 
 
             // ToDo: Define/update Shipping
@@ -124,7 +119,27 @@ namespace CommerceTraining.Controllers
             return RedirectToAction("Index", new { node = orderPageReference, passedAlong = passingValue });
         }
 
+        private IEnumerable<PaymentMethodDto.PaymentMethodRow> GetPaymentMethods()
+        {
+            return PaymentManager.GetPaymentMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value).PaymentMethod;
+        }
 
+        private IEnumerable<ShippingMethodDto.ShippingMethodRow> GetShipmentMethods()
+        {
+            return ShippingManager.GetShippingMethodsByMarket(_currentMarket.GetCurrentMarket().MarketId.Value, false).ShippingMethod;
+        }
+
+        private IEnumerable<ShippingRate> GetShippingRates()
+        {
+            var shippingRates = new List<ShippingRate>();
+            var shipMethods = GetShipmentMethods();
+            foreach(var method in shipMethods)
+            {
+                var shipRate = new ShippingRate(method.ShippingMethodId, method.Name, new Money(method.BasePrice, method.Currency));
+                shippingRates.Add(shipRate);
+            }
+            return shippingRates;
+        }
         // Prewritten 
         private string ValidateCart(ICart cart)
         {
@@ -159,7 +174,15 @@ namespace CommerceTraining.Controllers
 
             if (CustomerContext.Current.CurrentContact == null)
             {
-                
+                var shipment = cart.GetFirstShipment();
+                if(shipment.ShippingAddress != null)
+                {
+                    //return something and maybe do cleanup
+                }
+                shippingAddress = _orderGroupFactory.CreateOrderAddress(cart);
+                shippingAddress.CountryName = "USA";
+                shippingAddress.Id = "DemoAddress";
+                shippingAddress.Email = "Homer@acme.com";
             }
             else
             {
